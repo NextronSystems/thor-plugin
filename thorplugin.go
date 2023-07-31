@@ -46,7 +46,7 @@ type ObjectReader interface {
 
 type Scanner interface {
 	ScanString(data string)
-	ScanFile(name string, data []byte)
+	ScanFile(name string, data []byte, unpackMethod string)
 
 	Logger
 }
