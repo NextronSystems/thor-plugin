@@ -58,8 +58,8 @@ type Scanner interface {
 }
 
 type Logger interface {
-	Log(score int64, text string)
-	Info(text string)
-	Debug(text string)
-	Error(text string)
+	Log(score int64, text string, kv ...any)
+	Info(text string, kv ...any)
+	Debug(text string, kv ...any)
+	Error(text string, kv ...any)
 }
