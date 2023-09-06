@@ -44,9 +44,15 @@ type ObjectReader interface {
 	Size() int64
 }
 
+type KeyValuePair struct {
+	Key   string
+	Value string
+}
+
 type Scanner interface {
 	ScanString(data string)
 	ScanFile(name string, data []byte, unpackMethod string)
+	ScanStructuredData(data []KeyValuePair)
 
 	Logger
 }
