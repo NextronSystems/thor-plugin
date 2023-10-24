@@ -26,7 +26,7 @@ rule Shadow: SHADOWFILE {
 			}
 			user, hash := line[0], line[1]
 			if strings.HasPrefix(hash, "$1$") {
-				scanner.Log(60, "User has MD5 hashed password in /etc/shadow file", "user", user)
+				scanner.Log("Unsafe user details found", "User has MD5 hashed password in /etc/shadow file", 60, "user", user)
 			}
 		}
 	})

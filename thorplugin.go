@@ -112,7 +112,7 @@ type Logger interface {
 	//
 	// kv needs to be a number of key / value pairs, where each key must be a
 	// string, ordered as key1, value1, key2, value2, ...
-	Log(score int64, text string, kv ...any)
+	Log(text string, reason string, score int64, kv ...any)
 
 	// Info logs an informational message.
 	//
