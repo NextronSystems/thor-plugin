@@ -2,6 +2,8 @@ package thor
 
 import (
 	"io"
+
+	"github.com/NextronSystems/jsonlog"
 )
 
 // Initial entry point for THOR plugins is:
@@ -24,26 +26,26 @@ type RegisterActions interface {
 	// AddYaraRule adds one or multiple YARA rules to THOR's ruleset.
 	//
 	// This is typically used to register a rule with a special tag that is then used with
-	// AddYaraRuleHook.
-	AddYaraRule(ruletype RuleType, rule string)
+	// AddRuleHook.
+	AddYaraRule(ruletype YaraRuleType, rule string)
 
-	// AddYaraRuleHook registers a callback for a specific YARA rule tag.
+	// AddRuleHook registers a callback for a specific rule tag.
 	//
-	// Whenever a YARA rule with this tag matches on any data, the callback
-	// is invoked with the data that the YARA rule matched on.
+	// Whenever a YARA or sigma rule with this tag matches on any data, the callback
+	// is invoked with the data that the rule matched on.
 	// The matched data can be a file, registry entry, log entry, or any
 	// other kind of data that is scanned by THOR.
-	AddYaraRuleHook(tag string, callback RuleMatchedCallback)
+	AddRuleHook(tag string, callback RuleMatchedCallback)
 }
 
-// RuleType defines a type of YARA rules within THOR.
+// YaraRuleType defines a type of YARA rules within THOR.
 // Each rule type is applied to different type of data.
-type RuleType int
+type YaraRuleType int
 
 const (
 	// TypeMeta rules are applied to all files, however, they can only access
 	// the first 2048 bytes of each file and the THOR external variables.
-	TypeMeta RuleType = iota
+	TypeMeta YaraRuleType = iota
 
 	// TypeKeyword are applied to all elements except for files.
 	TypeKeyword
@@ -62,16 +64,15 @@ const (
 	TypeProcess
 )
 
-// RuleMatchedCallback describes a callback for matched YARA rules.
+// RuleMatchedCallback describes a callback for matched rules.
 type RuleMatchedCallback func(scanner Scanner, object MatchingObject)
 
-// MatchingObject describes an object that a YARA rule matched on.
+// MatchingObject describes an object that a rule matched on.
 type MatchingObject struct {
-	// Reader provides access to the content of the object that the YARA rule matched on.
-	Reader ObjectReader
-
-	// Path contains (for file objects) the path of the file that the YARA rule matched on.
-	Path string
+	// Object is the full description of the object that the rule matched on.
+	Object jsonlog.Object
+	// Reader provides access to the content of the object that the rule matched on. The content will be empty for all objects except for files and processes.
+	Content ObjectReader
 }
 
 type ObjectReader interface {
