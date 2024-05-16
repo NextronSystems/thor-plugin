@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"io"
 
+	"github.com/NextronSystems/jsonlog/thorlog/v3"
 	"github.com/NextronSystems/thor-plugin"
 )
 
@@ -14,11 +15,15 @@ rule DetectZipFiles: ZIPFILE {
         score = 0
     condition: filetype == "ZIP"
 }`)
-	actions.AddYaraRuleHook("ZIPFILE", func(scanner thor.Scanner, object thor.MatchingObject) {
-		scanner.Debug("Scanning ZIP file", "path", object.Path)
-		zipReader, err := zip.NewReader(object.Reader, object.Reader.Size())
+	actions.AddRuleHook("ZIPFILE", func(scanner thor.Scanner, object thor.MatchingObject) {
+		file, isFile := object.Object.(*thorlog.File)
+		if !isFile {
+			return
+		}
+		scanner.Debug("Scanning ZIP file", "path", file.Path)
+		zipReader, err := zip.NewReader(object.Content, object.Content.Size())
 		if err != nil {
-			scanner.Error("Could not parse zip file", "path", object.Path, "error", err)
+			scanner.Error("Could not parse zip file", "path", file.Path, "error", err)
 			return
 		}
 		for _, file := range zipReader.File {
@@ -31,17 +36,17 @@ rule DetectZipFiles: ZIPFILE {
 func scanFile(config thor.Configuration, scanner thor.Scanner, object thor.MatchingObject, file *zip.File) {
 	fileReader, err := file.Open()
 	if err != nil {
-		scanner.Error("Could not open file in zip file", "path", object.Path, "file", file.Name, "error", err)
+		scanner.Error("Could not open file in zip file", "file", file.Name, "error", err)
 		return
 	}
 	defer fileReader.Close()
 	if file.UncompressedSize64 > config.MaxFileSize {
-		scanner.Error("File in zip file is too large for analysis", "path", object.Path, "file", file.Name, "size", file.UncompressedSize64)
+		scanner.Error("File in zip file is too large for analysis", "file", file.Name, "size", file.UncompressedSize64)
 		return
 	}
 	data, err := io.ReadAll(fileReader)
 	if err != nil {
-		scanner.Error("Could not read file in zip file", "path", object.Path, "file", file.Name, "error", err)
+		scanner.Error("Could not read file in zip file", "file", file.Name, "error", err)
 		return
 	}
 	// This is possibly recursive: if the data is (another) ZIP, our hook will be called again

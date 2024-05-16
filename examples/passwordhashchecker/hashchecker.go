@@ -14,8 +14,8 @@ rule Shadow: SHADOWFILE {
         score = 0
     condition: filepath == "/etc" and filename == "shadow"
 }`)
-	actions.AddYaraRuleHook("SHADOWFILE", func(scanner thor.Scanner, object thor.MatchingObject) {
-		lineReader := bufio.NewScanner(object.Reader)
+	actions.AddRuleHook("SHADOWFILE", func(scanner thor.Scanner, object thor.MatchingObject) {
+		lineReader := bufio.NewScanner(object.Content)
 		for lineReader.Scan() {
 			fullLine := lineReader.Text()
 

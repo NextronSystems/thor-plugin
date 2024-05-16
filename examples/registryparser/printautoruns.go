@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
-	"strings"
+	"path/filepath"
 
+	"github.com/NextronSystems/jsonlog/thorlog/v3"
 	"github.com/NextronSystems/thor-plugin"
 )
 
@@ -17,14 +17,13 @@ rule RunKey: RUNKEY {
     condition:
 		1 of them
 }`)
-	actions.AddYaraRuleHook("RUNKEY", func(scanner thor.Scanner, object thor.MatchingObject) {
-		// See https://thor-manual.nextron-systems.com/en/latest/usage/custom-signatures.html#thor-yara-rules-for-registry-detection
-		// for the format of the data we receive from the registry
-		lineReader := bufio.NewScanner(object.Reader)
-		for lineReader.Scan() {
-			splitLine := strings.SplitN(lineReader.Text(), ";", 3)
-			logger.Info("Found autorun entry in registry", "value", splitLine[1], "command", splitLine[2])
+	actions.AddRuleHook("RUNKEY", func(scanner thor.Scanner, object thor.MatchingObject) {
+		registryValue, isRegistryValue := object.Object.(*thorlog.RegistryValue)
+		if !isRegistryValue {
+			return
 		}
+		valueName := filepath.Base(registryValue.Key)
+		logger.Info("Found autorun entry in registry", "value", valueName, "command", registryValue.ParsedValue)
 	})
 	logger.Info("PrintAutoruns plugin loaded!")
 }
