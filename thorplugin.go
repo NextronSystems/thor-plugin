@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/NextronSystems/jsonlog"
+	"github.com/NextronSystems/jsonlog/thorlog/v3"
 )
 
 // Initial entry point for THOR plugins is:
@@ -36,6 +37,8 @@ type RegisterActions interface {
 	// The matched data can be a file, registry entry, log entry, or any
 	// other kind of data that is scanned by THOR.
 	AddRuleHook(tag string, callback RuleMatchedCallback)
+
+	AddPostProcessingHook(callback PostProcessingCallback)
 }
 
 // YaraRuleType defines a type of YARA rules within THOR.
@@ -67,12 +70,22 @@ const (
 // RuleMatchedCallback describes a callback for matched rules.
 type RuleMatchedCallback func(scanner Scanner, object MatchingObject)
 
+// PostProcessingCallback describes a callback for actions on a fully scanned object.
+type PostProcessingCallback func(object MatchedObject)
+
 // MatchingObject describes an object that a rule matched on.
 type MatchingObject struct {
 	// Object is the full description of the object that the rule matched on.
 	Object jsonlog.Object
 	// Reader provides access to the content of the object that the rule matched on. The content will be empty for all objects except for files and processes.
 	Content ObjectReader
+}
+
+type MatchedObject struct {
+	Object     jsonlog.Object
+	Content    ObjectReader
+	TotalScore int64
+	Reasons    []thorlog.Reason
 }
 
 type ObjectReader interface {
