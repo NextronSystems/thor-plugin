@@ -71,7 +71,7 @@ const (
 type RuleMatchedCallback func(scanner Scanner, object MatchingObject)
 
 // PostProcessingCallback describes a callback for actions on a fully scanned object.
-type PostProcessingCallback func(object MatchedObject)
+type PostProcessingCallback func(logger Logger, object MatchedObject)
 
 // MatchingObject describes an object that a rule matched on.
 type MatchingObject struct {
