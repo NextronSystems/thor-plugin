@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"strings"
 
+	"github.com/NextronSystems/jsonlog"
+	"github.com/NextronSystems/jsonlog/thorlog/v3"
 	"github.com/NextronSystems/thor-plugin"
 )
 
@@ -16,18 +18,37 @@ rule Shadow: SHADOWFILE {
 }`)
 	actions.AddRuleHook("SHADOWFILE", func(scanner thor.Scanner, object thor.MatchingObject) {
 		lineReader := bufio.NewScanner(object.Content)
+		var offset int
 		for lineReader.Scan() {
 			fullLine := lineReader.Text()
 
 			line := strings.Split(fullLine, ":")
 			if len(line) != 9 {
 				scanner.Error("Corrupt shadow line")
+				offset += len(fullLine) + 1
 				continue
 			}
 			user, hash := line[0], line[1]
 			if strings.HasPrefix(hash, "$1$") {
-				scanner.Log("Unsafe user details found", "User has MD5 hashed password in /etc/shadow file", 60, "user", user)
+				userOffset := uint64(offset)
+				hashOffset := uint64(offset + len(user) + 1)
+				scanner.AddReason(thorlog.NewReason("User has MD5 hashed password in /etc/shadow file", 60, thorlog.Signature{
+					Type:  thorlog.Custom,
+					Class: thorlog.ClassInternalHeuristic,
+				}, thorlog.FormattedMatchStrings{
+					{
+						Match:  thorlog.FormattedData{Data: []byte(user)},
+						Offset: &userOffset,
+						Field:  jsonlog.NewReference(object.Object, &object.Object.(*thorlog.File).Content),
+					},
+					{
+						Match:  thorlog.FormattedData{Data: []byte(hash)},
+						Offset: &hashOffset,
+						Field:  jsonlog.NewReference(object.Object, &object.Object.(*thorlog.File).Content),
+					},
+				}))
 			}
+			offset += len(fullLine) + 1
 		}
 	})
 	logger.Info("ShadowParser plugin loaded!")
