@@ -117,17 +117,13 @@ type Scanner interface {
 	// and Sigma rules.
 	ScanStructuredData(data []KeyValuePair)
 
+	// AddReason adds a reason to the element passed to the callback.
+	AddReason(reason thorlog.Reason)
+
 	Logger
 }
 
 type Logger interface {
-	// Log logs a notice, warning, or alert based on the score passed and the
-	// --notice / --warning / --alert thresholds passed to THOR.
-	//
-	// kv needs to be a number of key / value pairs, where each key must be a
-	// string, ordered as key1, value1, key2, value2, ...
-	Log(text string, reason string, score int64, kv ...any)
-
 	// Info logs an informational message.
 	//
 	// kv needs to be a number of key / value pairs, where each key must be a
