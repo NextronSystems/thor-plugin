@@ -1,0 +1,4 @@
+github.com/NextronSystems/jsonlog v0.0.0-20250205144531-15ac5e18da0c h1:fXEFR3hqLpfHfjGmrT62c5Y+VWSaoaqSYu67FxiDbBg=
+github.com/NextronSystems/jsonlog v0.0.0-20250205144531-15ac5e18da0c/go.mod h1:Hk47VW018TX8o/0sxK+EJt16iRE7gB91zGZGiaAjcww=
+golang.org/x/exp v0.0.0-20240213143201-ec583247a57a h1:HinSgX1tJRX3KsL//Gxynpw5CTOAIPhgL4W8PNiIpVE=
+golang.org/x/exp v0.0.0-20240213143201-ec583247a57a/go.mod h1:CxmFvTBINI24O/j8iY7H1xHzx2i4OsyguNBmN/uPtqc=
