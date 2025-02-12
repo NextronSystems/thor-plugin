@@ -1,6 +1,6 @@
 ## THOR Plugin System
 
-Starting with THOR 10.8, THOR supports Plugins. THOR Plugins give a quick option to extend THOR with your own,
+Starting with THOR 11, THOR supports Plugins. THOR Plugins give a quick option to extend THOR with your own,
 custom features by executing your own scanning or parsing logic within THOR.
 
 ### Introduction
