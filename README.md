@@ -25,9 +25,10 @@ Plugins are written in Golang and communicate with THOR via an interface defined
 `thorplugin.go`. They are packaged as ZIP archives and placed in the `plugins/` directory.
 
 The ZIP archive's content is similar to an independent Golang package. The archive must contain a
-Golang file that defines a package `main`. Additionally, the archive may contain any number of
-additional Golang files. If the plugin uses external libraries apart from the standard library,
-these must be included in a `vendor` directory in the ZIP archive (see `go mod vendor`).
+Golang file that defines a package `main`. Additionally, the archive may contain:
+* Any number of additional Golang files
+* A `metadata.yml` file with information about the plugin (see below)
+* A `vendor` directory in case the plugin uses external libraries apart from the standard library (see `go mod vendor`)
 
 Each plugin must define an `Init(thor.Configuration, thor.Logger, thor.RegisterActions)` function.
 This function is called on THOR startup and allows plugins to define the conditions when a plugin
@@ -44,6 +45,24 @@ package for more information.
 > to support the Go specification completely for the latest two major Go versions, there are some
 > limitations. For instance, plugins cannot use `unsafe` and `syscall` packages from the standard
 > library. Refer to _ yaegi_'s documentation for more information.
+
+#### Metadata
+
+Plugins may contain a `metadata.yml` file in the root of the ZIP archive. This file contains
+metadata about the plugin, such as the plugin's name, version, and a description. \
+THOR reads this file and displays the information in the THOR log when the plugin is loaded.
+
+The `metadata.yml` file must be a valid YAML file and may contain the following fields:
+
+* `name`: The name of the plugin. This field is mandatory and will be used in the THOR log for output from the plugin.
+* `version`: The version of the plugin. This field is optional and may be used to track the plugin's version.
+* `description`: A description of the plugin. This field is optional and may be used to describe the plugin's purpose.
+* `author`: The author of the plugin. This field is optional and may be used to credit the plugin's author.
+* `requires_thor`: The minimum THOR version required to run the plugin.
+  This field is optional.
+  It must be a valid semantic version string, prefixed with `v` (e.g., `v11.0.0`). \
+  If the THOR version is lower than the specified version, THOR will not load the plugin and log an error instead.
+* `link`: A URL to the plugin's source code or documentation. This field is optional.
 
 ### Examples
 

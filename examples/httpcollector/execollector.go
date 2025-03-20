@@ -14,7 +14,7 @@ const sampleServerUrl = "http://localhost:8084/upload"
 
 func Init(config thor.Configuration, logger thor.Logger, actions thor.RegisterActions) {
 	actions.AddPostProcessingHook(uploadSample)
-	logger.Info("HTMLCollector plugin loaded!")
+	logger.Info("HTTPCollector plugin loaded!")
 }
 
 func uploadSample(logger thor.Logger, object thor.MatchedObject) {

@@ -1,0 +1,6 @@
+name: ZIP Parser
+author: Max Altgelt
+version: v1.0.0
+description: |
+  Parser for ZIP files.
+requires_thor: v11.0.0
