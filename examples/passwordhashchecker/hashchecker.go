@@ -32,17 +32,18 @@ rule Shadow: SHADOWFILE {
 			if strings.HasPrefix(hash, "$1$") {
 				userOffset := uint64(offset)
 				hashOffset := uint64(offset + len(user) + 1)
-				scanner.AddReason(thorlog.NewReason("User has MD5 hashed password in /etc/shadow file", 60, thorlog.Signature{
+				scanner.AddReason(thorlog.NewReason("User has MD5 hashed password in /etc/shadow file", thorlog.Signature{
 					Type:  thorlog.Custom,
 					Class: thorlog.ClassInternalHeuristic,
-				}, thorlog.FormattedMatchStrings{
+					Score: 60,
+				}, thorlog.MatchStrings{
 					{
-						Match:  thorlog.FormattedData{Data: []byte(user)},
+						Match:  thorlog.MatchData{Data: []byte(user)},
 						Offset: &userOffset,
 						Field:  jsonlog.NewReference(object.Object, &object.Object.(*thorlog.File).Content),
 					},
 					{
-						Match:  thorlog.FormattedData{Data: []byte(hash)},
+						Match:  thorlog.MatchData{Data: []byte(hash)},
 						Offset: &hashOffset,
 						Field:  jsonlog.NewReference(object.Object, &object.Object.(*thorlog.File).Content),
 					},
