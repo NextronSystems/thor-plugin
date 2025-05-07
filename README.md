@@ -63,6 +63,8 @@ The `metadata.yml` file must be a valid YAML file and may contain the following 
   It must be a valid semantic version string, prefixed with `v` (e.g., `v11.0.0`). \
   If the THOR version is lower than the specified version, THOR will not load the plugin and log an error instead.
 * `link`: A URL to the plugin's source code or documentation. This field is optional.
+* `build_tags`: A list of build tags that are applied when loading the plugin. This field is optional.
+  It may be used to specify build tags that are required for the plugin to work correctly.
 
 ### Examples
 
