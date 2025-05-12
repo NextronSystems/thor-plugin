@@ -1,6 +1,0 @@
-name: Autoruns Printer
-author: Max Altgelt
-version: v1.0.0
-description: |
-  Prints the autorun commands from the registry's Run key.
-requires_thor: v11.0.0

@@ -68,4 +68,5 @@ The `metadata.yml` file must be a valid YAML file and may contain the following 
 
 ### Examples
 
-See the `examples/` folder for several examples and ideas on how to write THOR plugins.
+See `github.com/thor-plugin/` for existing plugins, including several examples.
+There is also a [plugin template](github.com/thor-plugin/template) available that can be used as a starting point for new plugins.
