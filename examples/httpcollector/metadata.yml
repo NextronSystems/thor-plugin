@@ -1,6 +1,0 @@
-name: Executable Collector
-author: Gregor Matura
-version: v1.0.0
-description: |
-  Uploads PE files found to a sample server.
-requires_thor: v11.0.0

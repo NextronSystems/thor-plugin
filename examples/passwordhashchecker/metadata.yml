@@ -1,6 +1,0 @@
-name: Shadow Hash Checker
-author: Max Altgelt
-version: v1.0.0
-description: |
-  Checks the /etc/shadow file for weak hashes.
-requires_thor: v11.0.0
