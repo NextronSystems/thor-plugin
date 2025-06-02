@@ -82,10 +82,8 @@ type MatchingObject struct {
 }
 
 type MatchedObject struct {
-	Object     jsonlog.Object
-	Content    ObjectReader
-	TotalScore int64
-	Reasons    []thorlog.Reason
+	Finding *thorlog.Finding
+	Content ObjectReader
 }
 
 type ObjectReader interface {
