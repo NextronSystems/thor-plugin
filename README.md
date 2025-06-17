@@ -11,6 +11,12 @@ In a nutshell, THOR Plugins are ZIP archives containing Golang code that is exec
 a scan. Plugins register _hooks_ that are called during the scan and perform custom actions in
 there.
 
+### Existing Plugins
+
+You can find existing plugins in the [thor-plugins](https://github.com/thor-plugins/`) organization.
+These plugins are developed and maintained by the THOR community. You can use these plugins to
+extend THOR's functionality without having to write your own plugins.
+
 ### Using a Plugin
 
 Plugins are ZIP files placed in a `plugins/` folder in your THOR directory. Each file is
@@ -46,6 +52,12 @@ package for more information.
 > limitations. For instance, plugins cannot use `unsafe` and `syscall` packages from the standard
 > library. Refer to _ yaegi_'s documentation for more information.
 
+#### Plugin Template
+
+There is a [plugin template](https://github.com/thor-plugins/template) available that can be used as a starting point for new plugins.
+It provides a basic structure for a plugin, including the necessary files and directories,
+and a github pipeline to build the plugin automatically.
+
 #### Metadata
 
 Plugins may contain a `metadata.yml` file in the root of the ZIP archive. This file contains
@@ -65,8 +77,3 @@ The `metadata.yml` file must be a valid YAML file and may contain the following 
 * `link`: A URL to the plugin's source code or documentation. This field is optional.
 * `build_tags`: A list of build tags that are applied when loading the plugin. This field is optional.
   It may be used to specify build tags that are required for the plugin to work correctly.
-
-### Examples
-
-See `github.com/thor-plugin/` for existing plugins, including several examples.
-There is also a [plugin template](github.com/thor-plugin/template) available that can be used as a starting point for new plugins.
