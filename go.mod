@@ -2,7 +2,7 @@ module github.com/NextronSystems/thor-plugin
 
 go 1.20
 
-require github.com/NextronSystems/jsonlog v0.0.0-20250205144531-15ac5e18da0c
+require github.com/NextronSystems/jsonlog v1.0.0-alpha.0.20260217085034-6cb530d8ac82
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
