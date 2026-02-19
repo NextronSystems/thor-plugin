@@ -1,5 +1,5 @@
-github.com/NextronSystems/jsonlog v0.0.0-20250205144531-15ac5e18da0c h1:fXEFR3hqLpfHfjGmrT62c5Y+VWSaoaqSYu67FxiDbBg=
-github.com/NextronSystems/jsonlog v0.0.0-20250205144531-15ac5e18da0c/go.mod h1:Hk47VW018TX8o/0sxK+EJt16iRE7gB91zGZGiaAjcww=
+github.com/NextronSystems/jsonlog v1.0.0-alpha.0.20260217085034-6cb530d8ac82 h1:bzUZ6Ur5bQBjII93FB2oc01An2Sei+HYdOx6MEPfxPk=
+github.com/NextronSystems/jsonlog v1.0.0-alpha.0.20260217085034-6cb530d8ac82/go.mod h1:Hk47VW018TX8o/0sxK+EJt16iRE7gB91zGZGiaAjcww=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
