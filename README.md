@@ -30,21 +30,60 @@ Golang file that defines a package `main`. Additionally, the archive may contain
 * A `metadata.yml` file with information about the plugin (see below)
 * A `vendor` directory in case the plugin uses external libraries apart from the standard library (see `go mod vendor`)
 
+> Note: Plugins are interpreted by [yaegi](https://github.com/traefik/yaegi). While _yaegi_ tries
+> to support the Go specification completely for the latest two major Go versions, there are some
+> limitations. For instance, plugins cannot use `unsafe` and `syscall` packages from the standard
+> library. Refer to _yaegi_'s documentation for more information.
+
 Each plugin must define an `Init(thor.Configuration, thor.Logger, thor.RegisterActions)` function.
 This function is called on THOR startup and allows plugins to define the conditions when a plugin
 should be notified, i.e., register _hooks_.
 
 Hooks are invoked during the scan whenever something is scanned that fulfills the conditions
-specified for the hook. In the context of the hook, plugins have access to the data of the scanned
-element. There, plugins can perform further analysis on the data, or interact with the running THOR
-scan by, e.g., logging a finding, logging an informational message, or manipulate further THOR
-actions on the scanned element. Refer to the available hooks in `RegisterActions` in the `thor`
-package for more information.
+specified for the hook.
 
-> Note: Plugins are interpreted by [yaegi](https://github.com/traefik/yaegi). While _yaegi_ tries
-> to support the Go specification completely for the latest two major Go versions, there are some
-> limitations. For instance, plugins cannot use `unsafe` and `syscall` packages from the standard
-> library. Refer to _ yaegi_'s documentation for more information.
+In the context of the hook, plugins have access to the data of the scanned
+element and can perform further analysis on the data, or interact with the running THOR
+scan. This could be e.g. logging a finding, logging an informational message, or manipulate further THOR
+actions on the scanned element.
+
+#### Tag hooks
+
+The most common hook is `AddRuleHook`, which is based on _tags_. All
+[signatures](https://thor-manual.nextron-systems.com/en/v11/signatures/index.html) can have tags;
+whenever a signature with a specific tag matches on an object, the hook is triggered.
+
+This is used for e.g. parsers; define a YARA rule that matches on the file format you want
+to parse, give it a unique tag, and have your parser hook trigger on this tag.
+
+> YARA rules for file formats should usually be
+> [meta rules](https://thor-manual.nextron-systems.com/en/v11/signatures/yara.html#specific-yara-rules)
+> to ensure that they are applied to all files, i.e., use `TypeMeta` as `YaraRuleType`.
+
+```go
+func Init(config thor.Configuration, logger thor.Logger, actions thor.RegisterActions) {
+    actions.AddYaraRule(thor.TypeMeta, `
+rule DetectMyFormat: MYTAG {
+    meta:
+        score = 0
+    strings:
+        $magicheader = "deadbeef"
+    condition: $magicheader at 0
+}`)
+    actions.AddRuleHook("MYTAG", parseMyFormat)
+}
+
+func parseMyFormat(scanner thor.Scanner, object thor.MatchingObject) {
+    // Analyze the object here...
+}
+```
+
+#### Post processing hooks
+
+Post processing hooks can be registered with `AddPostProcessingHook` and are invoked for every element.
+They have access to the complete report that THOR generates for this object, including all signatures that matched.
+
+They are usually used for logging; e.g. you could send all findings to your SIEM in a custom format.
 
 #### Metadata
 
