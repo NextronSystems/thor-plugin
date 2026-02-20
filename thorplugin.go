@@ -102,17 +102,19 @@ type KeyValuePair struct {
 //
 // Each scanner instance is only valid for the duration of the callback.
 type Scanner interface {
-	// ScanString scans a passed string with filename IOCs, keyword YARA rules, and Sigma rules.
-	ScanString(data string)
-
 	// ScanFile scans a passed file as if it was found on the file system.
 	// unpackMethod should contain the method by which this file was extracted from the
 	// MatchingObject. It is used for the file's unpack_source and unpack_parent YARA external variables
 	// and should by convention be an upper case word, e.g. ZIP or RAR.
 	ScanFile(name string, data []byte, unpackMethod string)
 
-	// ScanStructuredData scans a set of key/value pairs with filename IOCs, keyword YARA rules,
-	// and Sigma rules.
+	// ScanStructuredData passes a set of key/value pairs to THOR for scanning.
+	//
+	// For data that does not correspond to key-value pairs, feel free to use a single key
+	// with a string representation of your data as a value.
+	//
+	// THOR will create a thorlog.PluginStructuredData object from the passed key/value pairs
+	// and scan it with filename IOCs, keyword YARA rules, and Sigma rules.
 	ScanStructuredData(data []KeyValuePair)
 
 	// AddReason adds a reason to the element passed to the callback.
